@@ -3,7 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:uber_clone/AllScreens/search_screen.dart';
 import 'package:uber_clone/AllWidgets/divider_widget.dart';
+import 'package:uber_clone/Assistants/assistantMethod.dart';
+import 'package:uber_clone/DataHandler/app_data.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({ Key? key }) : super(key: key);
@@ -30,6 +34,8 @@ class _MainScreenState extends State<MainScreen> {
     LatLng latlngPosition = LatLng(position.latitude, position.longitude);
     CameraPosition cameraPosition = new CameraPosition(target: latlngPosition, zoom: 14);
     googleMapController.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    String address = await AssistantMethods.searchCoordinateAddress(position, context);
+    print("This is your Address ::" + address);
   }
 
   static const CameraPosition _initialCameraPosition = CameraPosition(
@@ -97,22 +103,24 @@ class _MainScreenState extends State<MainScreen> {
       body: Stack(
         children: [
 
-          GoogleMap(
-            mapType: MapType.normal,
-            myLocationButtonEnabled: true,
-            initialCameraPosition: _initialCameraPosition,
-            myLocationEnabled: true,
-            zoomGesturesEnabled: true,
-            zoomControlsEnabled: true,
-            onMapCreated: (GoogleMapController controller){
-              _mapControllerCompleter.complete(controller);
-              googleMapController = controller;
-              setState(() {
-                bottomPaddingOfMap = 265;
-              });
-              locatePosition();
-
-            },
+          Container(
+            padding: EdgeInsets.only(bottom: 245),
+            child: GoogleMap(
+              mapType: MapType.normal,
+              myLocationButtonEnabled: true,
+              initialCameraPosition: _initialCameraPosition,
+              myLocationEnabled: true,
+              zoomGesturesEnabled: true,
+              zoomControlsEnabled: true,
+              onMapCreated: (GoogleMapController controller){
+                _mapControllerCompleter.complete(controller);
+                googleMapController = controller;
+                setState(() {
+                  bottomPaddingOfMap = 265;
+                });
+                locatePosition();
+              },
+            ),
           ),
 
           //Hamburger Button
@@ -170,9 +178,11 @@ class _MainScreenState extends State<MainScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  
                   const SizedBox(height: 6,),
                   Text("Hi There, ", style: TextStyle(fontSize: 12)),
                   Text("Where to? ", style: TextStyle(fontSize: 20, fontFamily: "Brand-Bold")),
+                  
                   const SizedBox(height: 20,),
                   Container(
                     decoration: BoxDecoration(
@@ -187,14 +197,19 @@ class _MainScreenState extends State<MainScreen> {
                         )
                       ]
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Row(
-                        children: const [
-                          Icon(Icons.search, color: Colors.yellowAccent),
-                          SizedBox(width: 10),
-                          Text("Search Drop Off")
-                        ],
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).pushNamedAndRemoveUntil(SearchScreen.idScreen, (route) => false);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Row(
+                          children: const [
+                            Icon(Icons.search, color: Colors.yellowAccent),
+                            SizedBox(width: 10),
+                            Text("Search Drop Off")
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -207,7 +222,11 @@ class _MainScreenState extends State<MainScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Add Home"),
+                          Text(
+                            Provider.of<AppData>(context).pickUpLocation != null?
+                            Provider.of<AppData>(context).pickUpLocation!.placeName
+                            :"Add Home"
+                          ),
                           SizedBox(height: 4,),
                           Text("Your living home address", style: TextStyle(color: Colors.black54, fontSize: 12),)
                         ],

@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:uber_clone/AllScreens/main_screen.dart';
-import 'package:uber_clone/AllScreens/registerationScreen.dart';
+import 'package:uber_clone/AllScreens/registeration_screen.dart';
 import 'package:uber_clone/AllWidgets/progressDialog.dart';
 import 'package:uber_clone/main.dart';
 
