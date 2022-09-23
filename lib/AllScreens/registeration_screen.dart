@@ -195,7 +195,6 @@ class RegisterationScreen extends StatelessWidget {
                     registerNewUser(context);
                   }
                   
-
                 }, 
               ),
             ),
@@ -263,7 +262,7 @@ class RegisterationScreen extends StatelessWidget {
 }
 
 displayToastMessage(String message, BuildContext context){
-  Fluttertoast.showToast(msg: message);
+  Fluttertoast.showToast(msg: message, toastLength: Toast.LENGTH_LONG);
 }
 
 

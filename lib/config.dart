@@ -1,1 +1,1 @@
-String googleMapKey = "AIzaSyDhyDVEAZIPdKT_kDpcECAsnJ79xurUMuc";
+String mapKey = "AIzaSyDhyDVEAZIPdKT_kDpcECAsnJ79xurUMuc";
